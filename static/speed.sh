@@ -11,7 +11,7 @@ SCPfrm="/etc/ger-frm" && [[ ! -d ${SCPfrm} ]] && exit
 SCPinst="/etc/ger-inst" && [[ ! -d ${SCPinst} ]] && exit
 SCPidioma="${SCPdir}/idioma" && [[ ! -e ${SCPidioma} ]] && touch ${SCPidioma}
 
-link_bin="https://www.dropbox.com/s/0ubui8y2rw6v54r/speedtest.py"
+link_bin="https://raw.githubusercontent.com/Razhiel2019/protocloud/main/static/speedtest.py"
 [[ ! -e /bin/speedtest ]] && wget -O /bin/speedtest ${link_bin} > /dev/null 2>&1 && chmod +x /bin/speedtest
 
 velocity () {

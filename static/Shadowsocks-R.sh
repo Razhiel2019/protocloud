@@ -91,7 +91,7 @@ read opcao
 case $opcao in
 1)
 msg -bar
-wget --no-check-certificate -O Instalador-Shadowsocks-R.sh https://www.dropbox.com/s/z3wedjha34kewvh/instalador-shadowsocks-r.sh > /dev/null 2>&1
+wget --no-check-certificate -O Instalador-Shadowsocks-R.sh https://www.dropbox.com/s/tkzs8e5nwi8lojm/instalador-shadowsocks-r.sh > /dev/null 2>&1
 chmod +x Instalador-Shadowsocks-R.sh
 ./Instalador-Shadowsocks-R.sh 2>&1 | tee Instalador-Shadowsocks-R.log
 
@@ -100,7 +100,7 @@ chmod +x Instalador-Shadowsocks-R.sh
 msg -bar
 echo -e "\033[1;93m  Desinstalar  ..."
 msg -bar
-wget --no-check-certificate -O Instalador-Shadowsocks-R.sh https://www.dropbox.com/s/z3wedjha34kewvh/instalador-shadowsocks-r.sh > /dev/null 2>&1
+wget --no-check-certificate -O Instalador-Shadowsocks-R.sh https://www.dropbox.com/s/tkzs8e5nwi8lojm/instalador-shadowsocks-r.sh > /dev/null 2>&1
 chmod +x Instalador-Shadowsocks-R.sh
 ./Instalador-Shadowsocks-R.sh uninstall
 rm -rf Instalador-Shadowsocks-R.sh

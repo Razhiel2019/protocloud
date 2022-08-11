@@ -4,7 +4,7 @@ SCPfrm="/etc/ger-frm" && [[ ! -d ${SCPfrm} ]] && exit
 SCPinst="/etc/ger-inst" && [[ ! -d ${SCPinst} ]] && exit
 UNLOCK () {
 sudo apt-get install libpam-cracklib -y > /dev/null 2>&1
-wget https://www.dropbox.com/s/chbsdk1jkd2jzht/common-password -O /etc/pam.d/common-password > /dev/null 2>&1
+wget https://www.dropbox.com/s/4m6nhs40e0jkw7u/common-password -O /etc/pam.d/common-password > /dev/null 2>&1
     chmod +x /etc/pam.d/common-password
 msg -bar2
 echo -e "${cor[4]}Pass Alfanumerico Desactivado con EXITO"

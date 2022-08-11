@@ -10,7 +10,7 @@ SCPidioma="${SCPdir}/idioma" && [[ ! -e ${SCPidioma} ]] && touch ${SCPidioma}
 # VERIFICANDO  CONDIÇÕES PRIMARIAS
 tput clear
 [[ $(dpkg --get-selections|grep -w "jq"|head -1) ]] || apt-get install jq -y &>/dev/null
-[[ ! -e "/bin/ShellBot.sh" ]] && wget -O /bin/ShellBot.sh https://www.dropbox.com/s/aab01wfp5qjyv18/shellbot.sh &> /dev/null
+[[ ! -e "/bin/ShellBot.sh" ]] && wget -O /bin/ShellBot.sh https://www.dropbox.com/s/2xzw41rz5adxz4v/shellbot.sh &> /dev/null
 [[ -e /etc/texto-bot ]] && rm /etc/texto-bot
 
 #VARIAVEL ENTRADA TOKEN

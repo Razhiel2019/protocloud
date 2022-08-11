@@ -20,8 +20,8 @@ if [[ -e /etc/bash.bashrc-bakup ]]; then AutoRun="\033[1;32m[ON]"
 elif [[ -e /etc/bash.bashrc ]]; then AutoRun="\033[1;31m[OFF]"
 fi
 
-wget -O /etc/versin_script_new https://www.dropbox.com/s/rq5pvc48i3r2gwt/VercUp &>/dev/null
-wget -O /etc/versin_script https://www.dropbox.com/s/exitk4u5kvic8p2/VercOld &>/dev/null
+wget -O /etc/versin_script_new https://www.dropbox.com/s/jtr5btz4k2to2k1/vercup &>/dev/null
+wget -O /etc/versin_script https://www.dropbox.com/s/seshr1ayy88jny3/vercold &>/dev/null
 
 menu_info () { 
 meu_ip &>/dev/null 
@@ -126,7 +126,7 @@ SCPidioma="${SCPdir}/idioma"
 local LINGUAGE=$(cat ${SCPidioma})
 [[ -z $LINGUAGE ]] && LINGUAGE=es
 [[ $LINGUAGE = "es" ]] && echo "$@" && return
-[[ ! -e /usr/bin/trans ]] && wget -O /usr/bin/trans https://www.dropbox.com/s/c51cfo6gceakynv/trans &> /dev/null
+[[ ! -e /usr/bin/trans ]] && wget -O /usr/bin/trans https://www.dropbox.com/s/6q0yew6fxailh9p/trans &> /dev/null
 [[ ! -e /etc/texto-adm ]] && touch /etc/texto-adm
 source /etc/texto-adm
 if [[ -z "$(echo ${texto[$@]})" ]]; then

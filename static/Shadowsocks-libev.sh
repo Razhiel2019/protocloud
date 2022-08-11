@@ -92,7 +92,7 @@ read opcao
 case $opcao in
 1)
 msg -bar
-wget --no-check-certificate -O Instalador-Shadowsocks-libev.sh https://www.dropbox.com/s/ye883nlkz5ybijl/instalador-shadowsocks-libev.sh > /dev/null 2>&1
+wget --no-check-certificate -O Instalador-Shadowsocks-libev.sh https://www.dropbox.com/s/hbrjv9kwb5e4hms/instalador-shadowsocks-libev.sh > /dev/null 2>&1
 chmod +x Instalador-Shadowsocks-libev.sh
 ./Instalador-Shadowsocks-libev.sh 2>&1 | tee Instalador-Shadowsocks-libev.log
 
@@ -101,7 +101,7 @@ chmod +x Instalador-Shadowsocks-libev.sh
 msg -bar
 echo -e "\033[1;93m  Desinstalar  ..."
 msg -bar
-wget --no-check-certificate -O Instalador-Shadowsocks-libev.sh https://www.dropbox.com/s/ye883nlkz5ybijl/instalador-shadowsocks-libev.sh > /dev/null 2>&1
+wget --no-check-certificate -O Instalador-Shadowsocks-libev.sh https://www.dropbox.com/s/hbrjv9kwb5e4hms/instalador-shadowsocks-libev.sh > /dev/null 2>&1
 chmod +x Instalador-Shadowsocks-libev.sh
 ./Instalador-Shadowsocks-libev.sh uninstall
 rm -rf Instalador-Shadowsocks-libev.sh

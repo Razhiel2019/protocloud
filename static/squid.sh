@@ -215,7 +215,7 @@ echo -e "http_port $pts" >> $var_squid
 done
 echo -e "
 #nome
-visible_hostname ADM_TYPHON
+visible_hostname ADM_JMNIC
 
 via off
 forwarded_for off
@@ -241,7 +241,7 @@ echo -e "http_port $pts" >> $var_squid
 done
 echo -e "
 #nome
-visible_hostname VPS-MX
+visible_hostname ADM-JMNIC
 
 via off
 forwarded_for off
