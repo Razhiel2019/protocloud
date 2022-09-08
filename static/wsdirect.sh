@@ -29,14 +29,6 @@ MEU_IP2=$(wget -qO- ipv4.icanhazip.com)
 [[ "$MEU_IP" != "$MEU_IP2" ]] && echo "$MEU_IP2" || echo "$MEU_IP"
 }
 
-directssl () {
-clear
-msg -bar
-echo -e "\033[1;33m       WEBSOCKET DIRECT_STUNNEL_PYTHON "
-echo -e "\033[1;37m       Requiere Las Puertas Libres: 80 & 443  "
-msg -bar
-echo -e "\033[1;33m      ▪︎ INSTALANDO SSL EN PUERTO: 443 ▪︎  "
-
 inst_ssl () {
 pkill -f stunnel4
 pkill -f stunnel
@@ -55,9 +47,6 @@ service stunnel4 restart
 service stunnel restart
 service stunnel4 start
 }
-inst_ssl > /dev/null
-msg -bar
-echo -e "\033[1;33m   ▪︎ CONFIGURANDO PYTHON EN PUERTO: 80 ▪︎ "
 
 inst_py () {
 pkill -f 80
@@ -67,7 +56,7 @@ apt install screen -y
 
 pt=$(netstat -nplt |grep 'sshd' | awk -F ":" NR==1{'print $2'} | cut -d " " -f 1)
 
- cat <<EOF > proxy.py
+cat <<EOF > proxy.py
 import socket, threading, thread, select, signal, sys, time, getopt
 # CONFIG
 LISTENING_ADDR = '0.0.0.0'
@@ -312,7 +301,19 @@ EOF
 screen -dmS pythonwe python proxy.py -p 80&
 }
 
-inst_py > /dev/null 2>&1
+directssl () {
+clear
+msg -bar
+echo -e "\033[1;33m       WEBSOCKET DIRECT_STUNNEL_PYTHON "
+echo -e "\033[1;37m       Requiere Las Puertas Libres: 80 & 443  "
+msg -bar
+echo -e "\033[1;33m      ▪︎ INSTALANDO SSL EN PUERTO: 443 ▪︎  "
+
+inst_ssl &>/dev/null
+msg -bar
+echo -e "\033[1;33m   ▪︎ CONFIGURANDO PYTHON EN PUERTO: 80 ▪︎ "
+
+inst_py &>/dev/null
 rm -rf proxy.py
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT -p tcp --dport 443 -j ACCEPT
@@ -332,29 +333,6 @@ echo
 echo -e "\033[1;32m         INSTALACION COMPLETADA "
 echo "      Presione enter para finalizar... "
 read enter
-}
-
-directdrp () {
-clear
-msg -bar
-echo -e "\033[1;33m       WEBSOCKET DIRECT_CDN SSH/DROPBEAR"
-msg -bar
-echo
-echo -e "\e[1;37m 《 Se Enlazara Un Puerto SSH/Dropbear con Python_80 》 \e[0m"
-echo
-while true; do
-echo -ne "\e[1;37m Digite Un Puerto Activo: \033[0m" && read porta_socket
-tput cuu1 && tput dl1
-[[ $(mportas|grep -w "$porta_socket") ]] || break
-echo -e "\e[1;31m ESTE PUERTO YA ESTÁ EN USO \e[0m"
-echo ""
-unset porta_socket
-done
-echo -e "\e[1;97m        《 Introduzca Un Mini-Banner 》\e[0m"
-msg -bar
-echo -ne " Introduzca el texto en estado plano o en HTML: \033[1;37m\n" && read texto_soket
-[[ "$texto_soket" = "" ]]&& texto_soket='<span style="color: #ff0000;"><strong><span style="color: #ff9900;">By:</span>-<span style="color: #008000;"> ADM-JMNIC</span>- @Razhiel</strong></span>'
-sleep 0.5s
 }
 
 directdrpend () {
@@ -377,7 +355,7 @@ msg -bar
 echo -e "$(fun_trans  " DETENIENDO CONEXIONES WS DIRECT_CDN")"
 msg -bar
 pidproxy1=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy1 ]] && pid_kill $pidproxy1
-pidproxy2=$(ps aux |grep -v grep |grep -w "proxy.py"|grep dmS|awk '{print $2}') && [[ ! -z $pidproxy2 ]] && pid_kill $pidproxy2
+pidproxy2=$(ps x | grep "proxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy2 ]] && pid_kill $pidproxy2
 service stunnel4 stop > /dev/null 2>&1 
 apt-get purge stunnel4 -y &>/dev/null 
 apt-get purge stunnel -y &>/dev/null 
@@ -395,7 +373,7 @@ exit 0
 ### MENU PRINCIPAL
 IntWs () {
 pidproxy1=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy1 ]] && P1="\033[1;32m[ON] " || P1="\033[1;31m[OFF] "
-pidproxy2=$(ps aux |grep -v grep |grep -w "proxy.py"|grep dmS|awk '{print $2}') && [[ ! -z $pidproxy2 ]] && P2="\033[1;32m[ON] " || P2="\033[1;31m[OFF] "
+pidproxy2=$(ps x | grep "proxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy2 ]] && P2="\033[1;32m[ON] " || P2="\033[1;31m[OFF] "
 tput clear
 msg -bar
 echo -e "\033[1;33m $(fun_trans  "  WEBSOCKET DIRECT | ADM-JMNIC")"
@@ -410,16 +388,39 @@ IP=(meu_ip)
 while [[ -z $portproxy || $portproxy != @(0|[1-3]) ]]; do
 echo -ne "$(fun_trans  " Digite Una Opcion"): \033[1;37m" && read portproxy
 tput cuu1 && tput dl1
+case $portproxy in
+    2)directssl;;
+    3)remove_fun && return;;
+    0)return;;
+ esac
+clear
+msg -bar
+echo -e "\033[1;33m       WEBSOCKET DIRECT_CDN SSH/DROPBEAR"
+msg -bar
+echo
+echo -e "\e[1;37m 《 Se Enlazara Un Puerto SSH/Dropbear con Python_80 》 \e[0m"
+echo -e "\e[1;31m Es Necesario Haber Instalado Previamente El Protocolo A enlazar...\e[0m"
+echo
+while [[ -z $porta_socket || ! -z $(mportas|grep -w $porta_socket) ]]; do
+echo -ne "\e[1;37m Digite Un Puerto Activo: \033[0m" && read porta_socket
+tput cuu1 && tput dl1
+[[ $(mportas|grep -w "$porta_socket") ]] || break
+echo -e "\e[1;31m ESTE PUERTO YA ESTÁ EN USO \e[0m"
+echo ""
+unset porta_socket
+done
+echo -e "\e[1;97m        《 Introduzca Un Mini-Banner 》\e[0m"
+msg -bar
+echo -ne " Introduzca el texto en estado plano o en HTML: \033[1;37m\n" && read texto_soket
+[[ "$texto_soket" = "" ]]&& texto_soket='<span style="color: #ff0000;"><strong><span style="color: #ff9900;">By:</span>-<span style="color: #008000;"> ADM-JMNIC</span>- @Razhiel</strong></span>'
+sleep 0.5s
 done
     case $portproxy in
-    1)directdrp
-    screen -dmS screen python ${SCPinst}/wsproxy.py "$porta_socket" "$texto_soket"
+    1)screen -dmS screen python ${SCPinst}/wsproxy.py "$porta_socket" "$texto_soket"
     directdrpend;;
-    2)directssl;;
-    3)remove_fun;;
-    0)exit;;
     *);;
     esac
+echo
 echo -e "\033[1;92m|>>> Procedimiento COMPLETO <<<|"
 msg -bar
 }
