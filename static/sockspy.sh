@@ -351,6 +351,101 @@ chmod +x /etc/ger-inst/PDirect.py
 screen -dmS pydic-"$porta_socket" python ${SCPinst}/PDirect.py "$porta_socket" "$texto_soket" && echo ""$porta_socket" "$texto_soket"" >> /etc/newadm/PortPD.log
 }
 
+pid_kill () {
+[[ -z $1 ]] && refurn 1
+pids="$@"
+for pid in $(echo $pids); do
+kill -9 $pid &>/dev/null
+done
+}
+
+remove_fun () {
+echo -e "$(fun_trans  " Deteniendo Puertos Python/WS")"
+msg -bar
+pidproxy=$(ps x | grep "PPub.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy ]] && pid_kill $pidproxy
+pidproxy2=$(ps x | grep "PPriv.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy2 ]] && pid_kill $pidproxy2
+pidproxy3=$(ps x | grep "PDirect.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy3 ]] && pid_kill $pidproxy3
+pidproxy4=$(ps x | grep "POpen.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy4 ]] && pid_kill $pidproxy4
+pidproxy5=$(ps x | grep "PGet.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy5 ]] && pid_kill $pidproxy5
+pidproxy6=$(ps x | grep "scktcheck" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy6 ]] && pid_kill $pidproxy6
+pidproxy7=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy7 ]] && pid_kill $pidproxy7
+pidproxy8=$(ps x | grep sproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && pid_kill $pidproxy8
+service stunnel4 stop > /dev/null 2>&1 
+apt-get purge stunnel4 -y &>/dev/null 
+apt-get purge stunnel -y &>/dev/null 
+kill -9 $(ps aux |grep -v grep |grep -w "proxy.py"|grep dmS|awk '{print $2}') &>/dev/null 
+rm /etc/newadm/proxy.log &>/dev/null 
+echo
+echo -e "\033[1;91m  $(fun_trans  " PUERTOS DETENIDOS!!!")"
+msg -bar
+rm -rf /etc/newadm/PortPD.log
+echo "" > /etc/newadm/PortPD.log
+exit 0
+}
+
+iniciarsocks () {
+clear
+pidproxy=$(ps x | grep -w "PPub.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy ]] && P1="\033[1;32m[ON]" || P1="\033[1;31m[OFF]"
+pidproxy2=$(ps x | grep -w  "PPriv.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy2 ]] && P2="\033[1;32m[ON]" || P2="\033[1;31m[OFF]"
+pidproxy3=$(ps x | grep -w  "PDirect.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy3 ]] && P3="\033[1;32m[ON]" || P3="\033[1;31m[OFF]"
+pidproxy4=$(ps x | grep -w  "POpen.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy4 ]] && P4="\033[1;32m[ON]" || P4="\033[1;31m[OFF]"
+pidproxy5=$(ps x | grep "PGet.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy5 ]] && P5="\033[1;32m[ON]" || P5="\033[1;31m[OFF]"
+pidproxy6=$(ps x | grep "scktcheck" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy6 ]] && P6="\033[1;32m[ON]" || P6="\033[1;31m[OFF]"
+pidproxy7=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy7 ]] && P7="\033[1;32m[ON] " || P7="\033[1;31m[OFF] "
+pidproxy8=$(ps x | grep "proxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && P8="\033[1;32m[ON] " || P8="\033[1;31m[OFF] "
+msg -bar
+echo -e "\033[1;37m $(fun_trans  " INSTALADOR SOCKS_PYTHON")| ADM_JMNIC\e[0m"
+msg -bar
+echo -e "${cor[4]} [1] › \033[1;37m$(fun_trans  "Socks Python SIMPLE")      $P1"
+echo -e "${cor[4]} [2] › \033[1;37m$(fun_trans  "Socks Python SEGURO")     $P2"
+echo -e "${cor[4]} [3] › \033[1;37m$(fun_trans  "Socks Python DIRETO")      $P3"
+echo -e "${cor[4]} [4] › \033[1;37m$(fun_trans  "Socks Python OPENVPN")   $P4"
+echo -e "${cor[4]} [5] › \033[1;37m$(fun_trans  "Socks Python GETTUNEL")   $P5"
+echo -e "${cor[4]} [6] › \033[1;37m$(fun_trans  "Socks Python TCP BYPASS") $P6"
+msg -bar
+echo -e "${cor[4]} [7] › \033[1;37m$(fun_trans  "WS CDN_SSH/DROP") $P7"
+echo -e "${cor[4]} [8] › \033[1;37m$(fun_trans  "WS DIRECT_SSL")     $P8"
+msg -bar
+echo -e "${cor[4]} [9] › \033[1;37m$(fun_trans  "DETENER PUERTOS PYTHON/WS")"
+echo -e "${cor[4]} [0] › \033[1;37m$(fun_trans  "VOLVER")"
+msg -bar
+IP=(meu_ip)
+while [[ -z $portproxy || $portproxy != @(0|[1-9]) ]]; do
+echo -ne "$(fun_trans  "Digite Una Opcion"): \033[1;37m" && read portproxy
+tput cuu1 && tput dl1
+done
+ case $portproxy in
+    9)remove_fun;;
+    0)return;;
+ esac
+echo
+echo -e " Selecciona El Puerto Principal Proxy A Enlazar !!!"
+msg -bar
+porta_socket=
+while [[ -z $porta_socket || ! -z $(mportas|grep -w $porta_socket) ]]; do
+echo -ne " Digite el Puerto: \033[1;37m" && read porta_socket
+tput cuu1 && tput dl1
+done
+echo -e "$(fun_trans  " * Introduzca su Mini-Banner *")"
+msg -bar
+echo -ne " Introduzca el texto de estado plano o en HTML:\n \033[1;37m" && read texto_soket
+    msg -bar
+    case $portproxy in
+    1)screen -dmS screen python ${SCPinst}/PPub.py "$porta_socket" "$texto_soket";;
+    2)screen -dmS screen python3 ${SCPinst}/PPriv.py "$porta_socket" "$texto_soket" "$IP";;
+    3)PythonDic_fun;;
+    4)screen -dmS screen python ${SCPinst}/POpen.py "$porta_socket" "$texto_soket";;
+    5)gettunel_fun "$porta_socket";;
+    6)tcpbypass_fun "$porta_socket" "$texto_soket";;
+    7)screen -dmS screen python ${SCPinst}/wsproxy.py "$porta_socket" "$texto_soket";;
+    8)wsdirectssl:;
+    esac
+echo
+echo -e "\033[1;34m$(fun_trans "Procedimiento COMPLETO")"
+msg -bar
+}
+iniciarsocks
+
 wsdirectssl () {
 tput clear
 echo
@@ -379,7 +474,7 @@ service stunnel restart
 service stunnel4 start
 }
 
-fun_bar 'inst_ssl'
+inst_ssl &>/dev/null
 msg -bar
 echo -e "\033[1;33m   ▪︎ CONFIGURANDO PYTHON EN PUERTO: 80 ▪︎ "
 
@@ -636,7 +731,7 @@ EOF
 screen -dmS pythonwe python proxy.py -p 80&
 }
 
-fun_bar 'inst_py'
+inst_py &>/dev/null
 rm -rf proxy.py
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT -p tcp --dport 443 -j ACCEPT
@@ -656,98 +751,3 @@ echo
 echo -e "\033[1;32m         INSTALACION COMPLETADA "
 echo "      Presione enter para finalizar... "
 }
-
-
-pid_kill () {
-[[ -z $1 ]] && refurn 1
-pids="$@"
-for pid in $(echo $pids); do
-kill -9 $pid &>/dev/null
-done
-}
-remove_fun () {
-echo -e "$(fun_trans  " Deteniendo Puertos Python/WS")"
-msg -bar
-pidproxy=$(ps x | grep "PPub.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy ]] && pid_kill $pidproxy
-pidproxy2=$(ps x | grep "PPriv.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy2 ]] && pid_kill $pidproxy2
-pidproxy3=$(ps x | grep "PDirect.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy3 ]] && pid_kill $pidproxy3
-pidproxy4=$(ps x | grep "POpen.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy4 ]] && pid_kill $pidproxy4
-pidproxy5=$(ps x | grep "PGet.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy5 ]] && pid_kill $pidproxy5
-pidproxy6=$(ps x | grep "scktcheck" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy6 ]] && pid_kill $pidproxy6
-pidproxy7=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy7 ]] && pid_kill $pidproxy7
-pidproxy8=$(ps x | grep sproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && pid_kill $pidproxy8
-service stunnel4 stop > /dev/null 2>&1 
-apt-get purge stunnel4 -y &>/dev/null 
-apt-get purge stunnel -y &>/dev/null 
-kill -9 $(ps aux |grep -v grep |grep -w "proxy.py"|grep dmS|awk '{print $2}') &>/dev/null 
-rm /etc/newadm/proxy.log &>/dev/null 
-echo
-echo -e "\033[1;91m  $(fun_trans  " PUERTOS DETENIDOS!!!")"
-msg -bar
-rm -rf /etc/newadm/PortPD.log
-echo "" > /etc/newadm/PortPD.log
-exit 0
-}
-
-iniciarsocks () {
-clear
-pidproxy=$(ps x | grep -w "PPub.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy ]] && P1="\033[1;32m[ON]" || P1="\033[1;31m[OFF]"
-pidproxy2=$(ps x | grep -w  "PPriv.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy2 ]] && P2="\033[1;32m[ON]" || P2="\033[1;31m[OFF]"
-pidproxy3=$(ps x | grep -w  "PDirect.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy3 ]] && P3="\033[1;32m[ON]" || P3="\033[1;31m[OFF]"
-pidproxy4=$(ps x | grep -w  "POpen.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy4 ]] && P4="\033[1;32m[ON]" || P4="\033[1;31m[OFF]"
-pidproxy5=$(ps x | grep "PGet.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy5 ]] && P5="\033[1;32m[ON]" || P5="\033[1;31m[OFF]"
-pidproxy6=$(ps x | grep "scktcheck" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy6 ]] && P6="\033[1;32m[ON]" || P6="\033[1;31m[OFF]"
-pidproxy7=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy7 ]] && P7="\033[1;32m[ON] " || P7="\033[1;31m[OFF] "
-pidproxy8=$(ps x | grep "proxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && P8="\033[1;32m[ON] " || P8="\033[1;31m[OFF] "
-msg -bar
-echo -e "\033[1;37m $(fun_trans  " INSTALADOR SOCKS_PYTHON")| ADM_JMNIC\e[0m"
-msg -bar
-echo -e "${cor[4]} [1] › \033[1;37m$(fun_trans  "Socks Python SIMPLE") $P1"
-echo -e "${cor[4]} [2] › \033[1;37m$(fun_trans  "Socks Python SEGURO") $P2"
-echo -e "${cor[4]} [3] › \033[1;37m$(fun_trans  "Socks Python DIRETO") $P3"
-echo -e "${cor[4]} [4] › \033[1;37m$(fun_trans  "Socks Python OPENVPN") $P4"
-echo -e "${cor[4]} [5] › \033[1;37m$(fun_trans  "Socks Python GETTUNEL") $P5"
-echo -e "${cor[4]} [6] › \033[1;37m$(fun_trans  "Socks Python TCP BYPASS") $P6"
-msg -bar
-echo -e "${cor[4]} [7] › \033[1;37m$(fun_trans  "WS CDN_SSH/DROP") $P7"
-echo -e "${cor[4]} [8] › \033[1;37m$(fun_trans  "WS DIRECT_SSL") $P8"
-msg -bar
-echo -e "${cor[4]} [9] › \033[1;37m$(fun_trans  "DETENEE PUERTOS PYTHON/WS")"
-echo -e "${cor[4]} [0] › \033[1;37m$(fun_trans  "VOLVER")"
-msg -bar
-IP=(meu_ip)
-while [[ -z $portproxy || $portproxy != @(0|[1-9]) ]]; do
-echo -ne "$(fun_trans  "Digite Una Opcion"): \033[1;37m" && read portproxy
-tput cuu1 && tput dl1
-done
- case $portproxy in
-    9)remove_fun;;
-    0)return;;
- esac
-echo
-echo -e " Selecciona El Puerto Principal Proxy A Enlazar !!!"
-msg -bar
-porta_socket=
-while [[ -z $porta_socket || ! -z $(mportas|grep -w $porta_socket) ]]; do
-echo -ne " Digite el Puerto: \033[1;37m" && read porta_socket
-tput cuu1 && tput dl1
-done
-echo -e "$(fun_trans  " * Introduzca su Mini-Banner *")"
-msg -bar
-echo -ne " Introduzca el texto de estado plano o en HTML:\n \033[1;37m" && read texto_soket
-    msg -bar
-    case $portproxy in
-    1)screen -dmS screen python ${SCPinst}/PPub.py "$porta_socket" "$texto_soket";;
-    2)screen -dmS screen python3 ${SCPinst}/PPriv.py "$porta_socket" "$texto_soket" "$IP";;
-    3)PythonDic_fun;;
-    4)screen -dmS screen python ${SCPinst}/POpen.py "$porta_socket" "$texto_soket";;
-    5)gettunel_fun "$porta_socket";;
-    6)tcpbypass_fun "$porta_socket" "$texto_soket";;
-    7)screen -dmS screen python ${SCPinst}/wsproxy.py "$porta_socket" "$texto_soket";;
-    8)wsdirectssl:;
-    esac
-echo
-echo -e "\033[1;34m$(fun_trans "Procedimiento COMPLETO")"
-msg -bar
-}
-iniciarsocks
