@@ -24,9 +24,9 @@ openvpn.sh
 paysnd.sh
 ports.sh
 shadowsocks.sh
+wsdirect.sh
 ddos.sh
 sockspy.sh
-ws_direct.sh
 speed.sh
 speedtest.py
 squid.sh
