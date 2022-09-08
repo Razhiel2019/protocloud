@@ -2,7 +2,6 @@
 #31/03/2022
 
 clear
-msg -bar
 #colores
 lor1='\033[1;31m';lor2='\033[1;32m';lor3='\033[1;33m';lor4='\033[1;34m';lor5='\033[1;35m';lor6='\033[1;36m';lor7='\033[1;37m'
 declare -A cor=( [0]="\033[1;37m" [1]="\033[1;34m" [2]="\033[1;31m" [3]="\033[1;33m" [4]="\033[1;32m" )
@@ -29,6 +28,14 @@ MEU_IP2=$(wget -qO- ipv4.icanhazip.com)
 [[ "$MEU_IP" != "$MEU_IP2" ]] && echo "$MEU_IP2" || echo "$MEU_IP"
 }
 
+directssl () {
+clear
+msg -bar
+echo -e "\033[1;33m       WEBSOCKET DIRECT_STUNNEL_PYTHON "
+echo -e "\033[1;37m       Requiere Las Puertas Libres: 80 & 443  "
+msg -bar
+echo -e "\033[1;33m      ▪︎ INSTALANDO SSL EN PUERTO: 443 ▪︎  "
+
 inst_ssl () {
 pkill -f stunnel4
 pkill -f stunnel
@@ -47,6 +54,9 @@ service stunnel4 restart
 service stunnel restart
 service stunnel4 start
 }
+inst_ssl &>/dev/null
+msg -bar
+echo -e "\033[1;33m   ▪︎ CONFIGURANDO PYTHON EN PUERTO: 80 ▪︎ "
 
 inst_py () {
 pkill -f 80
@@ -56,7 +66,7 @@ apt install screen -y
 
 pt=$(netstat -nplt |grep 'sshd' | awk -F ":" NR==1{'print $2'} | cut -d " " -f 1)
 
-cat <<EOF > proxy.py
+ cat <<EOF > proxy.py
 import socket, threading, thread, select, signal, sys, time, getopt
 # CONFIG
 LISTENING_ADDR = '0.0.0.0'
@@ -301,18 +311,6 @@ EOF
 screen -dmS pythonwe python proxy.py -p 80&
 }
 
-directssl () {
-clear
-msg -bar
-echo -e "\033[1;33m       WEBSOCKET DIRECT_STUNNEL_PYTHON "
-echo -e "\033[1;37m       Requiere Las Puertas Libres: 80 & 443  "
-msg -bar
-echo -e "\033[1;33m      ▪︎ INSTALANDO SSL EN PUERTO: 443 ▪︎  "
-
-inst_ssl &>/dev/null
-msg -bar
-echo -e "\033[1;33m   ▪︎ CONFIGURANDO PYTHON EN PUERTO: 80 ▪︎ "
-
 inst_py &>/dev/null
 rm -rf proxy.py
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
@@ -393,8 +391,7 @@ case $portproxy in
     3)remove_fun && return;;
     0)return;;
  esac
-clear
-msg -bar
+echo
 echo -e "\033[1;33m       WEBSOCKET DIRECT_CDN SSH/DROPBEAR"
 msg -bar
 echo
