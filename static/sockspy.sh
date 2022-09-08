@@ -391,7 +391,7 @@ echo -e "${cor[4]} [5] › \033[1;37m$(fun_trans  "Socks Python GETTUNEL")    $P
 echo -e "${cor[4]} [6] › \033[1;37m$(fun_trans  "Socks Python TCP BYPASS")  $P6"
 msg -bar
 echo -e "${cor[4]} [7] > \033[1;36m$(fun_trans  "WebSocket - CDN SH/DROP") $P7"
-echo -e "${cor[4]} [8] > \033[1;36m$(fun_trans  "WebSocket SSL+PYTHON")    $P8\e[0m"
+echo -e "${cor[4]} [8] > \033[1;36m$(fun_trans  "WebSocket - CDN SSL+PY")  $P8\e[0m"
 msg -bar
 echo -e "${cor[4]} [9] › \033[1;37m$(fun_trans  "DETENER PUERTOS PYTHON")"
 echo -e "${cor[4]} [0] › \033[1;37m$(fun_trans  "VOLVER")"
@@ -402,21 +402,23 @@ echo -ne "$(fun_trans  " Digite Una Opcion"): \033[1;37m" && read portproxy
 tput cuu1 && tput dl1
 done
  case $portproxy in
-    8)${SCPinst}/ssl.sh;;
+    8)${SCPinst}/ssl.sh
+    return 0;;
     9)remove_fun;;
     0)return;;
  esac
-echo -e "bSelecciona Puerto Principal Proxy!!!"
+echo -e " Selecciona Puerto Principal Proxy!!!"
 msg -bar
 porta_socket=
 while [[ -z $porta_socket || ! -z $(mportas|grep -w $porta_socket) ]]; do
-echo -ne " Digite el Puerto: \033[1;37m" && read porta_socket
+echo -ne " Digite un Puerto Activo ssh/dropbear: \033[1;37m" && read porta_socket
 tput cuu1 && tput dl1
 done
 echo -e "$(fun_trans  " Introduzca su Mini-Banner")"
 msg -bar
 echo -ne "Introduzca el texto de estado plano o en HTML:\n \033[1;37m" && read texto_soket
-    msg -bar
+[[ "$texto_soket" = "" ]]&& texto_soket='<span style="color: #ff0000;"><strong><span style="color: #ff9900;">By:</span>-<span style="color: #008000;"> ADM-JMNIC</span>- @Razhiel</strong></span>'
+msg -bar
     case $portproxy in
     1)screen -dmS screen python ${SCPinst}/PPub.py "$porta_socket" "$texto_soket";;
     2)screen -dmS screen python3 ${SCPinst}/PPriv.py "$porta_socket" "$texto_soket" "$IP";;
@@ -426,7 +428,7 @@ echo -ne "Introduzca el texto de estado plano o en HTML:\n \033[1;37m" && read t
     6)tcpbypass_fun "$porta_socket" "$texto_soket";;
     7)screen -dmS screen python ${SCPinst}/wsproxy.py "$porta_socket" "$texto_soket";;
     esac
-echo -e "\033[1;34m$(fun_trans "Procedimiento COMPLETO")"
+echo -e "\033[1;34m$(fun_trans " Procedimiento COMPLETO!!!")"
 msg -bar
 }
 iniciarsocks
