@@ -379,7 +379,7 @@ service stunnel restart
 service stunnel4 start
 }
 
-fun_bar 'inst_ssl'
+inst_ssl &>/dev/null
 msg -bar
 echo -e "\033[1;33m   ▪︎ CONFIGURANDO PYTHON EN PUERTO: 80 ▪︎ "
 
@@ -636,7 +636,7 @@ EOF
 screen -dmS pythonwe python proxy.py -p 80&
 }
 
-fun_bar 'inst_py'
+inst_py &>/dev/null
 rm -rf proxy.py
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT -p tcp --dport 443 -j ACCEPT
@@ -675,7 +675,7 @@ pidproxy4=$(ps x | grep "POpen.py" | grep -v "grep" | awk -F "pts" '{print $1}')
 pidproxy5=$(ps x | grep "PGet.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy5 ]] && pid_kill $pidproxy5
 pidproxy6=$(ps x | grep "scktcheck" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy6 ]] && pid_kill $pidproxy6
 pidproxy7=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy7 ]] && pid_kill $pidproxy7
-pidproxy8=$(ps x | grep sproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && pid_kill $pidproxy8
+pidproxy8=$(ps x | grep "proxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && pid_kill $pidproxy8
 service stunnel4 stop > /dev/null 2>&1 
 apt-get purge stunnel4 -y &>/dev/null 
 apt-get purge stunnel -y &>/dev/null 
@@ -721,6 +721,7 @@ echo -ne "$(fun_trans  "Digite Una Opcion"): \033[1;37m" && read portproxy
 tput cuu1 && tput dl1
 done
  case $portproxy in
+    8)wsdirectssl;;
     9)remove_fun;;
     0)return;;
  esac
@@ -744,7 +745,6 @@ echo -ne " Introduzca el texto de estado plano o en HTML:\n \033[1;37m" && read 
     5)gettunel_fun "$porta_socket";;
     6)tcpbypass_fun "$porta_socket" "$texto_soket";;
     7)screen -dmS screen python ${SCPinst}/wsproxy.py "$porta_socket" "$texto_soket";;
-    8)wsdirectssl:;
     esac
 echo
 echo -e "\033[1;34m$(fun_trans "Procedimiento COMPLETO")"
