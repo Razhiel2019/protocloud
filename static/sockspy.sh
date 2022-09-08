@@ -369,7 +369,7 @@ pidproxy4=$(ps x | grep "POpen.py" | grep -v "grep" | awk -F "pts" '{print $1}')
 pidproxy5=$(ps x | grep "PGet.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy5 ]] && pid_kill $pidproxy5
 pidproxy6=$(ps x | grep "scktcheck" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy6 ]] && pid_kill $pidproxy6
 pidproxy7=$(ps x | grep "wsproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy7 ]] && pid_kill $pidproxy7
-pidproxy8=$(ps x | grep sproxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && pid_kill $pidproxy8
+pidproxy8=$(ps x | grep "proxy.py" | grep -v "grep" | awk -F "pts" '{print $1}') && [[ ! -z $pidproxy8 ]] && pid_kill $pidproxy8
 service stunnel4 stop > /dev/null 2>&1 
 apt-get purge stunnel4 -y &>/dev/null 
 apt-get purge stunnel -y &>/dev/null 
@@ -438,7 +438,7 @@ echo -ne " Introduzca el texto de estado plano o en HTML:\n \033[1;37m" && read 
     5)gettunel_fun "$porta_socket";;
     6)tcpbypass_fun "$porta_socket" "$texto_soket";;
     7)screen -dmS screen python ${SCPinst}/wsproxy.py "$porta_socket" "$texto_soket";;
-    8)wsdirectssl:;
+    8)wsdirectssl;;
     esac
 echo
 echo -e "\033[1;34m$(fun_trans "Procedimiento COMPLETO")"
