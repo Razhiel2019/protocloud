@@ -26,7 +26,6 @@ ports.sh
 shadowsocks.sh
 ddos.sh
 sockspy.sh
-wsdirect.sh
 speed.sh
 speedtest.py
 squid.sh
