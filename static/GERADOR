@@ -24,7 +24,6 @@ openvpn.sh
 paysnd.sh
 ports.sh
 shadowsocks.sh
-wsdirect.sh
 ddos.sh
 sockspy.sh
 speed.sh
