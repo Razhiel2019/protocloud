@@ -167,9 +167,6 @@
  clear
  
  install_python(){
-  msg -bar
-  echo -e "\033[1;97m Activando Servicios Python ►80\n" | pv -qL 12
-  msg -bar
 pkill -f 80
 pkill python
 apt install python -y
@@ -423,10 +420,7 @@ screen -dmS pythonwe python proxy.py -p 80&
 }
   
   install_ssl(){
-  apt-get install stunnel4 -y &>/dev/null
-  
-  apt-get install stunnel4 -y > /dev/null 2>&1 && msg -bar && echo -e "\033[1;97m Activando Servicios SSL ►443\n" | pv -qL 12
-  msg -bar
+  apt-get install stunnel4 -y > /dev/null 2>&1 
   echo -e "client = no\n[SSL]\ncert = /etc/stunnel/stunnel.pem\naccept = 443\nconnect = 127.0.0.1:80" > /etc/stunnel/stunnel.conf 
   openssl genrsa -out stunnel.key 2048 > /dev/null 2>&1 
   (echo ; echo @; echo @; echo @; echo @; echo @; echo @)|openssl req -new -key stunnel.key -x509 -days 1095 -out stunnel.crt > /dev/null 2>&1
@@ -439,9 +433,17 @@ screen -dmS pythonwe python proxy.py -p 80&
   rm -rf /root/stunnel.key > /dev/null 2>&1 
   }
   
-  install_python &>/dev/null
-  install_ssl  &>/dev/null
-  
+  msg -bar
+  echo -e "\033[1;97m Activando Servicios Python ►80\n" | pv -qL 12
+  msg -bar
+  fun_bar 'install_python'
+  echo
+  msg -bar
+  echo -e "\033[1;97m Activando Servicios SSL ►443\n" | pv -qL 12
+  msg -bar
+  fun_bar 'install_ssl'
+  msg -bar
+  echo
   echo -e "${cor[4]}               INSTALACION COMPLETA"
   msg -bar
  }
