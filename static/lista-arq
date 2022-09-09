@@ -7,7 +7,7 @@ PGet.py
 POpen.py
 PPriv.py
 PPub.py
-wsproxy.sh
+wsproxy.py
 Shadowsocks-R.sh
 Shadowsocks-libev.sh
 Unlock-Pass-VULTR.sh
