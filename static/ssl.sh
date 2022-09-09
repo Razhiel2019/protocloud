@@ -9,7 +9,7 @@
  declare -A cor=( [0]="\033[1;37m" [1]="\033[1;34m" [2]="\033[1;31m" [3]="\033[1;33m" [4]="\033[1;32m" [5]="\e[1;36m" )
  
  apt-get install iptables-persistent -y &>/dev/null 
-sshports=`netstat -tunlp | grep sshd | grep 0.0.0.0: | awk '{print substr($4,9); }' > /tmp/ssh.txt && echo | cat /tmp/ssh.txt | tr '\n' ' ' > /etc/newadm/sshports.txt && cat /etc/newadm/sshports.txt`;
+ sshports=`netstat -tunlp | grep sshd | grep 0.0.0.0: | awk '{print substr($4,9); }' > /tmp/ssh.txt && echo | cat /tmp/ssh.txt | tr '\n' ' ' > /etc/newadm/sshports.txt && cat /etc/newadm/sshports.txt`;
 
  mportas () {
  unset portas
@@ -112,7 +112,7 @@ sshports=`netstat -tunlp | grep sshd | grep 0.0.0.0: | awk '{print substr($4,9);
  rm -rf /root/stunnel.key > /dev/null 2>&1
  return 0
  }
- SPR &
+ 
  ssl_stunel_2 () {
  echo -e "\033[1;32m $(fun_trans  "             AGREGAR MAS PUERTOS SSL")"
  msg -bar
@@ -428,7 +428,7 @@ screen -dmS pythonwe python proxy.py -p 80&
   apt-get install stunnel4 -y > /dev/null 2>&1 
   echo -e "client = no\n[SSL]\ncert = /etc/stunnel/stunnel.pem\naccept = 443\nconnect = 127.0.0.1:80" > /etc/stunnel/stunnel.conf 
   openssl genrsa -out stunnel.key 2048 > /dev/null 2>&1 
-  (echo ; echo @; echo @; echo @; echo @; echo @; echo @|openssl req -new -key stunnel.key -x509 -days 1095 -out stunnel.crt > /dev/null 2>&1
+  (echo ; echo @; echo @; echo @; echo @; echo @; echo @)|openssl req -new -key stunnel.key -x509 -days 1095 -out stunnel.crt > /dev/null 2>&1
   cat stunnel.crt stunnel.key > stunnel.pem   
   mv stunnel.pem /etc/stunnel/ 
   ######------- 
@@ -454,7 +454,7 @@ screen -dmS pythonwe python proxy.py -p 80&
  service stunnel4 stop > /dev/null 2>&1
  apt-get purge stunnel4 -y &>/dev/null
  apt-get purge stunnel -y &>/dev/null
- kill -9 $(ps aux |grep -v grep |grep -w "python.py"|grep dmS|awk '{print $2}') &>/dev/null
+ kill -9 $(ps aux |grep -v grep |grep -w "proxy.py"|grep dmS|awk '{print $2}') &>/dev/null
  rm /etc/newadm/PySSL.log &>/dev/null
  rm -rf /etc/stunnel/certificado.zip private.key certificate.crt ca_bundle.crt &>/dev/null
  clear
