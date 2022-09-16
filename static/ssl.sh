@@ -1,6 +1,5 @@
 #!/bin/bash
 
-apt-get install iptables-persistent -y &>/dev/null 
 sshports=`netstat -tunlp | grep sshd | grep 0.0.0.0: | awk '{print substr($4,9); }' > /tmp/ssh.txt && echo | cat /tmp/ssh.txt | tr '\n' ' ' > /etc/newadm/sshports.txt && cat /etc/newadm/sshports.txt`;
 
 mportas () {
@@ -35,10 +34,10 @@ fun_bar () {
           ) > /dev/null 2>&1 &
           tput civis
 		  echo -e "${lor7}---------------------------------------------------${lor7}"
-          echo -ne "${lor1}    AGUARDE..${lor7}["
+          echo -ne "${lor7}    AGUARDE..${lor1}["
           while true; do
           for((i=0; i<18; i++)); do
-          echo -ne "${lor2}#"
+          echo -ne "${lor5}#"
           sleep 0.2s
           done
          [[ -e $HOME/fim ]] && rm $HOME/fim && break
@@ -46,34 +45,63 @@ fun_bar () {
          sleep 1s
          tput cuu1
          tput dl1
-         echo -ne "${lor1}    AGUARDE..${lor7}["
+         echo -ne "${lor7}    AGUARDE..${lor1}["
          done
-         echo -e "${lor7}]${lor1} -${lor7} FINALIZADO ${lor7}"
+         echo -e "${lor1}]${lor7} -${lor7} FINALIZADO ${lor7}"
          tput cnorm
 		 echo -e "${lor7}---------------------------------------------------${lor7}"
-        }
+ }
+        
+fun_bar2 () {
+comando[0]="$1"
+comando[1]="$2"
+ (
+[[ -e $HOME/fim ]] && rm $HOME/fim
+${comando[0]} -y > /dev/null 2>&1
+${comando[1]} -y > /dev/null 2>&1
+touch $HOME/fim
+ ) > /dev/null 2>&1 &
+echo -ne "\033[1;33m ["
+while true; do
+   for((i=0; i<18; i++)); do
+   echo -ne "\033[1;31m☵"
+   sleep 0.1s
+   done
+   [[ -e $HOME/fim ]] && rm $HOME/fim && break
+   echo -e "\033[1;33m]"
+   sleep 1s
+   tput cuu1
+   tput dl1
+   echo -ne "\033[1;33m ["
+done
+echo -e "\033[1;33m]\033[1;31m -\033[1;32m 100%\033[1;37m"
+}
 
-### PANEL
-sslmenu () {
-clear&&clear
+menu_ssl () {
+tput clear
+pres_adm
+echo -e "${lor2}            SSL MANAGER REMASTERIZADO"
 msg -bar
-echo -e "${lor2}            SSL MANAGER || WEBSOCKET "
-msg -bar
-[[ $(netstat -nplt |grep 'stunnel4') ]] && sessl="DETENER SERVICIO ${lor2}[ON]" || sessl="INICIAR SERVICIO ${lor1}[OFF]"
-echo -e "${lor7}[${lor2}1${lor7}] ${lor7} INSTALAR STUNNEL-4"
-echo -e "${lor7}[${lor2}2${lor7}] ${lor7} DESINTALAR STUNNEL-4"
+[[ $(netstat -nplt |grep 'stunnel4') ]] && sessl="DETENER STUNNEL4 ${lor2}[◉] " || sessl="INICIAR STUNNEL4 ${lor1}[◉] "
+[[ $(netstat -nplt |grep 'stunnel5') ]] && sessl5="DETENER STUNNEL5 ${lor2}[◉] " || sessl5="INICIAR STUNNEL5 ${lor1}[◉] "
+echo -e "${lor7}[${lor2}1${lor7}] ${lor7} INSTALAR SSL STUNNEL4"
+echo -e "${lor7}[${lor2}2${lor7}] ${lor7} DESINTALAR SSL STUNNEL4 "
 echo -e "${lor7}[${lor2}3${lor7}] ${lor7} AÑADIR NUEVO PUERTO "
+echo -e "${lor7}[${lor2}4${lor7}] ${lor7} $sessl "
+echo -e "\e[1;33m ▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎\e[0m"
+echo -e "${lor7}[${lor2}5${lor7}] ${lor7} INSTALAR STUNNEL5 DIRECTO"
+echo -e "${lor7}[${lor2}6${lor7}] ${lor7} DESINTALAR STUNNEL5 "
+echo -e "${lor7}[${lor2}7${lor7}] ${lor7} $sessl5 "
+echo -e "\e[1;33m ▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎\e[0m"
+echo -e "${lor7}[${lor2}8${lor7}] ${lor7} ACTIVAR CERTIFICADO MANUAL ZERO-SSL"
+echo -e "${lor7}[${lor2}9${lor7}] ${lor7} ACTIVAR CERTIFICADO WEB ZIP"
+echo -e "\e[1;33m ▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎▪︎\e[0m"
+echo -e "${lor7}[${lor2}10${lor7}] ${lor7} INSTALAR WEBSOCKET_PYTHON"
+echo -e "${lor7}[${lor2}11${lor7}] ${lor7} DESACTIVAR PUERTOS WEBSOCKET_PYTHON "
 msg -bar
-echo -e "${lor7}[${lor2}4${lor7}] ${lor7} ACTIVAR CERTIFICADO MANUAL ZERO-SSL"
-echo -e "${lor7}[${lor2}5${lor7}] ${lor7} ACTIVAR CERTIFICADO WEB ZIP"
+echo -e "${lor7}[${lor2}0${lor7}] ${lor3}==>${lor1} SALIR DEL PROTOCOLO "
 msg -bar
-echo -e "${lor7}[${lor2}6${lor7}] ${lor7} INSTALAR WEBSOCKET_PYTHON"
-echo -e "${lor7}[${lor2}7${lor7}] ${lor7} DESACTIVAR SERVICIOS WEBSOCKET "
-echo -e "${lor7}[${lor2}8${lor7}] ${lor7} $sessl "
-msg -bar
-echo -e "${lor7}[${lor2}0${lor7}] ${lor3}==>${lor1} SALIR"
-msg -bar
-read -p "SELECCIONA UNA OPCION : " opci
+read -p " SELECCIONA UNA OPCION: " opci
 case $opci in
 
 #OPCION 1
@@ -114,7 +142,8 @@ service stunnel4 start
 
 fun_bar 'inst_ssl'
 echo;echo -e "${lor2}  SSL STUNNEL INSTALADO " 
-fi;fi;fi;fi;;
+fi;fi;fi;fi
+;;
 
 #OPCION 2
 2)
@@ -160,16 +189,148 @@ service stunnel4 restart 1> /dev/null 2> /dev/null
 service stunnel restart 1> /dev/null 2> /dev/null
 sleep 2
 }
-
 fun_bar 'addgf'
 echo;echo -e "${lor2} NUEVO PUERTO AÑADIDO  $sslpt !${lor7}"
 fi;fi;fi
 else
 echo;echo -e "${lor1} SSL STUNEEL NO INSTALADO !${lor7}"
-fi;;
+fi
+;;
 
 #OPCION 4
 4)
+if [ -f /etc/stunnel/stunnel.conf ];then
+if netstat -nltp|grep 'stunnel4' > /dev/null; then
+service stunnel stop 1> /dev/null 2> /dev/null
+service stunnel4 stop 1> /dev/null 2> /dev/null
+echo;echo -e "${lor1} SERVICIO DETENIDO "
+else
+service stunnel start 1> /dev/null 2> /dev/null
+service stunnel4 start 1> /dev/null 2> /dev/null
+echo;echo -e "${lor2} SERVICIO INICIADO "
+fi
+else
+echo;echo -e "${lor1} SSL STUNNEL NO ESTA INSTALADO "
+fi
+;;
+
+#OPCION 5
+5)
+int_sl5 () {
+apt-get update -y
+apt-get install openssh-server -y
+apt-get install curl -y
+apt-get install openssh-client -y
+apt install gcc g++ build-essential libreadline-dev zlib1g-dev linux-headers-generic -y
+cd /opt
+wget https://www.stunnel.org/archive/5.x/stunnel-5.60.tar.gz
+tar xzf stunnel-5.60.tar.gz
+cd stunnel-5.60
+./configure
+make
+make install
+make cert
+touch /usr/local/etc/stunnel/stunnel.conf
+echo "setuid = stunnel " >> /usr/local/etc/stunnel/stunnel.conf
+echo "setgid = stunnel " >> /usr/local/etc/stunnel/stunnel.conf
+echo "chroot = /var/lib/stunnel " >> /usr/local/etc/stunnel/stunnel.conf
+echo "pid = /stunnel.pid " >> /usr/local/etc/stunnel/stunnel.conf
+echo "client = no " >> /usr/local/etc/stunnel/stunnel.conf
+echo "[ssh] " >> /usr/local/etc/stunnel/stunnel.conf
+echo "cert = /usr/local/etc/stunnel/stunnel.pem " >> /usr/local/etc/stunnel/stunnel.conf
+echo "accept = 443 " >> /usr/local/etc/stunnel/stunnel.conf
+echo "connect = 127.0.0.1:22222" >> /usr/local/etc/stunnel/stunnel.conf
+useradd -s /bin/false -r stunnel
+mkdir /var/lib/stunnel
+chown stunnel:stunnel /var/lib/stunnel
+cp /usr/local/share/doc/stunnel/examples/stunnel.init /etc/init.d/stunnel5
+chmod 755 /etc/init.d/stunnel5
+cp /usr/local/share/doc/stunnel/examples/stunnel.service /etc/systemd/system/stunnel5.service
+systemctl stop stunnel4
+systemctl disable stunnel4
+systemctl start stunnel5
+systemctl enable stunnel5
+}
+clear&&clear
+pres_adm
+if [ -f /etc/stunnel/stunnel.conf ]; then
+echo; echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+echo -e "\e[1;33m ...HAY UNA INSTALACION STUNNEL EN TU SISTEMA... \e[0m"
+echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+echo; echo -e "\e[1;31m ▪︎Si Stunnel4 esta instalado en su sistema,\n Esta nueva Instalación detendrá SSL4 para,\n Habilitar a la nueva conexión SSL5 Directo▪︎ \e[0m"
+sleep 0.5
+echo; echo -e "\e[1;33m DESEAS CONTINUAR? : \e[0m"
+while [[ ${yesno} != @(s|S|y|Y|n|N) ]]; do
+read -p " [S/N]: " yesno
+tput cuu1 && tput dl1
+done
+if [[ ${yesno} = @(s|S|y|Y) ]]; then
+echo; echo -e "\e[1;32m INSTALANDO STUNNEL5 DIRECTO....\e[0m"
+fun_bar 'int_sl5'
+echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+echo -e "\e[1;32m STUNNEL5 HA SIDO INSTALADO!!! \e[0m"
+echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+sleep 0.5
+echo; echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+echo -e "\033[1;32m            Puertos Disponibles / En ejecucion                \033[0m"
+echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+netstat -tulpn | awk -vOFS='\t' '/^tcp/{print $4,$7} /^udp/{print $4,$6}' | grep "$filter"
+rm stunnel5
+rm -r stunnel5
+read enter
+fi
+else
+echo; echo -e "\e[1;32m INSTALANDO STUNNEL5 DIRECTO....\e[0m"
+fun_bar 'int_sl5'
+echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+echo -e "\e[1;32m STUNNEL5 HA SIDO INSTALADO!!! \e[0m"
+echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+sleep 0.5
+echo; echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+echo -e "\033[1;32m            Puertos Disponibles / En ejecucion                \033[0m"
+echo -e "\033[1;30m-----------------------------------------------------------\033[0m"
+netstat -tulpn | awk -vOFS='\t' '/^tcp/{print $4,$7} /^udp/{print $4,$6}' | grep "$filter"
+rm stunnel5
+rm -r stunnel5
+read enter
+fi
+;;
+
+#OPCION 6
+6)
+fun_bar 'del_ssl5'
+echo;echo -e "${lor2}  SERVICIO STUNNEL5 FUE REMOVIDO " 
+del_ssl5 () {
+service stunnel5 stop
+apt-get remove stunnel5 -y
+apt-get purge stunnel5 -y
+apt-get purge stunnel -y
+rm -rf /etc/stunnel
+rm -rf /etc/stunnel/stunnel.conf
+rm -rf /etc/default/stunnel5
+rm -rf /etc/stunnel/stunnel.pem
+}
+;;
+
+#OPCION 7
+7)
+if [ -f /etc/stunnel/stunnel.conf ];then
+if netstat -nltp|grep 'stunnel5' > /dev/null; then
+service stunnel stop 1> /dev/null 2> /dev/null
+service stunnel5 stop 1> /dev/null 2> /dev/null
+echo;echo -e "${lor1} SERVICIO DETENIDO "
+else
+service stunnel start 1> /dev/null 2> /dev/null
+service stunnel5 start 1> /dev/null 2> /dev/null
+echo;echo -e "${lor2} SERVICIO INICIADO "
+fi
+else
+echo;echo -e "${lor1} STUNNEL5 NO ESTA INSTALADO "
+fi
+;;
+
+#OPCION 8
+8)
 if [ -f /etc/stunnel/stunnel.conf ]; then
 insapa2(){
 for pid in $(pgrep python);do
@@ -218,10 +379,11 @@ fun_bar 'inscerts'
 echo;echo -e "${lor2} CERTIFICADO INSTALADO ${lor7}" 
 else
 echo;echo -e "${lor1} SSL STUNNEL NO ESTA INSTALADO "
-fi;;
+fi
+;;
 
-#OPCION 5
-5)
+#OPCION 9
+9)
  [[ $(mportas|grep stunnel4|head -1) ]] && {
  echo -e "\\033[1;33m $(fun_trans  " ¡¡¡ Deteniendo Stunnel !!!")"
  msg -bar
@@ -295,13 +457,15 @@ fi;;
  msg -bar
  ;;
 
-#OPCION 6
-6)
+#OPCION 10
+10)
 tput clear
 echo
 msg -bar
-echo -e "\033[1;33m            WEBSOCKET SSL_PYTHON "
-echo -e "\033[1;37m       Requiere Las Puertas Libres: 80 & 443  "
+echo -e "\033[1;33m      WEBSOCKET SSL_PYTHON (ADMATRIX-PRO) "
+msg -bar
+echo -e "\033[1;37m   🂡 Requiere Las Puertas Libres: 80 & 443 🂡  "
+echo
 msg -bar
 echo -e "\033[1;33m      ▪︎ INSTALANDO SSL EN PUERTO: 443 ▪︎  "
 
@@ -324,8 +488,7 @@ service stunnel restart
 service stunnel4 start
 }
 
-#fun_bar 'inst_ssl'
-inst_ssl > /dev/null 2>&1
+fun_bar 'inst_ssl'
 msg -bar
 echo -e "\033[1;33m   ▪︎ CONFIGURANDO PYTHON EN PUERTO: 80 ▪︎ "
 
@@ -582,30 +745,18 @@ EOF
 screen -dmS pythonwe python proxy.py -p 80&
 }
 
-#$fun_bar 'inst_py'
-inst_py > /dev/null 2>&1
+fun_bar 'inst_py'
 rm -rf proxy.py
 iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT -p tcp --dport 443 -j ACCEPT
 
 echo -e "ps x | grep 'pythonwe' | grep -v 'grep' || screen -dmS pythonwe python proxy.py -p 80" >> /etc/autostart
-msg -bar
-echo
-echo -e "\e[1;33m     ================================\e[0m"
-echo -e "\e[1;33m     ====== SS + PYTHON PROXY  =====\e[0m"
-echo -e "\e[1;33m     ================================\e[0m"
-echo -e "\e[1;33m     Inicia Ip en Port Stunnel-4: 443     ==\e[0m"
-echo -e "\e[1;33m     Inicia ip en Port Python: 80         ==\e[0m"
-echo -e "\e[1;33m     ================================\e[0m"
-echo
-msg -bar
-echo
+
 echo -e "\033[1;32m         INSTALACION COMPLETADA "
-echo "      Presione enter para finalizar... "
 ;;
 
-#OPCION 7
-7)
+#OPCION 11
+11)
 msg -bar 
 echo
 echo -e "\e[1;33m      DETENIENDO SERVICIOS WEBSOCKED SSL+PYTHON\e[0m" 
@@ -619,28 +770,18 @@ echo -e  "\e[1;32m           LOS SERVICIOS SE HAN DETENIDO\e[0m"
 msg -bar
 ;;
 
-#OPCION 8
-8)
-if [ -f /etc/stunnel/stunnel.conf ];then
-if netstat -nltp|grep 'stunnel4' > /dev/null; then
-service stunnel stop 1> /dev/null 2> /dev/null
-service stunnel4 stop 1> /dev/null 2> /dev/null
-echo;echo -e "${lor1} SERVICIO DETENIDO "
-else
-service stunnel start 1> /dev/null 2> /dev/null
-service stunnel4 start 1> /dev/null 2> /dev/null
-echo;echo -e "${lor2} SERVICIO INICIADO "
-fi
-else
-echo;echo -e "${lor1} SSL STUNNEL NO ESTA INSTALADO "
-fi;;
-
 #OPCION SALIDA
 0)
-exit 0;;
+exit
+;;
 
-*)menussl;;
+*)
+echo
+echo -e "\e[1;31m\n Elige Una Opcion Habilitada... \e[0m"
+sleep 1
+menu_ssl
+;;
 esac
 }
-sslmenu
-#####
+menu_ssl
+#fin
